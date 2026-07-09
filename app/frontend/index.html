@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EnterpriseAI</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="mark">E</span>
+          <div>
+            <strong>EnterpriseAI</strong>
+            <small>Phase 1 SaaS</small>
+          </div>
+        </div>
+
+        <section id="auth-panel" class="panel">
+          <h2>Account</h2>
+          <form id="login-form">
+            <input name="username" autocomplete="username" placeholder="Username" required>
+            <input name="password" type="password" autocomplete="current-password" placeholder="Password" required>
+            <button type="submit">Login</button>
+          </form>
+          <form id="register-form">
+            <input name="username" autocomplete="username" placeholder="New username" required>
+            <input name="email" type="email" autocomplete="email" placeholder="Email">
+            <input name="password" type="password" autocomplete="new-password" placeholder="Password" required>
+            <input name="workspace_name" placeholder="Workspace name">
+            <button type="submit">Register</button>
+          </form>
+        </section>
+
+        <section id="workspace-panel" class="panel hidden">
+          <div class="panel-head">
+            <h2>Workspaces</h2>
+            <button id="logout-button" class="quiet" type="button">Logout</button>
+          </div>
+          <select id="workspace-select"></select>
+          <form id="workspace-form" class="inline-form">
+            <input name="name" placeholder="New workspace" required>
+            <button type="submit">Add</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <h2>Conversations</h2>
+          <div id="conversation-list" class="list"></div>
+        </section>
+      </aside>
+
+      <section class="chat">
+        <header class="topbar">
+          <div>
+            <h1 id="workspace-title">Welcome</h1>
+            <p id="status-text">Register or login to begin.</p>
+          </div>
+        </header>
+
+        <div id="messages" class="messages"></div>
+
+        <form id="conversation-form" class="composer hidden">
+          <textarea name="prompt" rows="3" placeholder="Store a user prompt..." required></textarea>
+          <textarea name="response" rows="3" placeholder="Store the response..."></textarea>
+          <div class="composer-row">
+            <input name="model" placeholder="Model" value="manual">
+            <input name="latency_ms" type="number" min="0" placeholder="Latency ms">
+            <button type="submit">Save Conversation</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="rightbar">
+        <section class="panel">
+          <h2>Documents</h2>
+          <form id="document-form" class="upload hidden">
+            <input name="file" type="file" accept=".pdf,.docx,.txt,.csv" required>
+            <button type="submit">Upload</button>
+          </form>
+          <div id="document-list" class="list"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Settings</h2>
+          <dl id="settings-list">
+            <dt>User</dt>
+            <dd id="current-user">Not signed in</dd>
+            <dt>Workspace</dt>
+            <dd id="current-workspace">None</dd>
+          </dl>
+        </section>
+      </aside>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
