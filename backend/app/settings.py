@@ -7,6 +7,7 @@ REST_FRAMEWORK = {
     # Permissions: Global security rules for who can access your endpoints
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ],
 
     # Authentication: How users identify themselves (Session, Token, JWT, etc.)
