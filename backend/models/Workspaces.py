@@ -6,9 +6,9 @@ class Workspace(Base):
     __tablename__ = "workspaces"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullabe=False)
-    user_id = Column(Integer, ForeignKey("users.id"), nullabe=False)
+    name = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
-    user = relationship("User", back_populates="workspace")
+    user = relationship("User", back_populates="workspaces")
     conversations = relationship("Conversation", back_populates="workspace", cascade="all, delete-orphan")
-    documents =  relationship("Documment", back_populate="workspace", cascade="all, delete-orphan")
+    documents =  relationship("Document", back_populates="workspace", cascade="all, delete-orphan")

@@ -4,8 +4,9 @@ from sqlalchemy.orm import relationship
 from backend.database import Base
 
 class Document(Base):
+    __tablename__ = "documents"
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
 
-    conversation_id = Column(Integer, ForeignKey("workspace.id"))
-    workspace = relationship("Workspace", back_populate="document")
+    workspace_id = Column(Integer, ForeignKey("workspaces.id"), nullable=False)
+    workspace = relationship("Workspace", back_populates="documents")

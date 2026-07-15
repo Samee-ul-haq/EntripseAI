@@ -8,7 +8,7 @@ class Conversation(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    workspace_id = Column(Integer, ForeignKey("workspaces.id"), nullabl=False)
+    workspace_id = Column(Integer, ForeignKey("workspaces.id"), nullable=False)
 
-    workspace = relationship("Workspace", back_populates="conversation")
-    messages  =  relationship("Message",  back_populates="conversation")
+    workspace = relationship("Workspace", back_populates="conversations")
+    messages  =  relationship("Message",  back_populates="conversation", cascade="all, delete-orphan")

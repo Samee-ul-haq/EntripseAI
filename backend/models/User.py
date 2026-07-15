@@ -10,9 +10,9 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String,nullable=False)
     email = Column(String, unique=True, nullable=False)
-    password_hash = Column(String, null=False)
+    password_hash = Column(String, nullable=False)
 
-    workspace =  relationship("Workspace",back_populates= "user", cascade = "all, delete-orphan")
+    workspaces =  relationship("Workspace",back_populates= "user", cascade = "all, delete-orphan")
 
     @property
     def password(self):
@@ -25,4 +25,4 @@ class User(Base):
         salt = bcrypt.gensalt()
         hashed_password = bcrypt.hashpw(plain_text_password.encode("utf-8"),salt)
 
-        self.password_hash = hashed_password
+        self.password_hash = hashed_password.decode("utf-8")
