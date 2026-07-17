@@ -12,7 +12,8 @@ class UserCreate(UserBase):
 
 
 
-class UserLogin(UserBase):
+class UserLogin(BaseModel):
+    email : EmailStr
     password : str
 
 
