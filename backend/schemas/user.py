@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
+from sqlalchemy import DateTime
 
 
 class UserBase(BaseModel):
@@ -17,10 +18,8 @@ class UserLogin(BaseModel):
     password : str
 
 
-
-# class UserUpdate(UserBase):
-#     email : EmailStr
-#     password : str
+class UserResponseMe(UserBase):
+    created_at = DateTime
 
 
 class UserResponse(UserBase):

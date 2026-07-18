@@ -1,10 +1,19 @@
 import bcrypt
+import jwt
+import os
 from fastapi import HTTPException
+from datetime import datetime, timedelta, timezone
+from sqlalchemy.orm import Session
 
 
 from backend.models import User
-from backend.schemas.user import (UserCreate, UserLogin, UserResponse)
-from sqlalchemy.orm import Session
+from backend.schemas.user import (UserCreate, UserLogin, UserResponse, UserResponseMe)
+
+
+
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"])
+SECREAT_KEY  = os.getenv("SECRET_KEY")
+ALGORITHM  = os.getenv("ALGORITHM")
 
 
 def create_user(user : UserCreate, db: Session)-> User:
@@ -42,7 +51,59 @@ def login(user : UserLogin, db : Session):
         user.password.encode("utf-8"),
         user_db.password.encode("utf-8"),
         ):
-        return "login successfull"
+
+        expire = datetime.now(timezone.utc)+timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        token_data = {
+            "sub" : str(user_db.id),
+            "exp" : expire
+        }
+
+        encoded_jwt = jwt.encode(token_data, SECREAT_KEY, ALGORITHM)
+
+        return {
+            "access_token" : encoded_jwt,
+            "token_type" : "bearer"
+        }
     
     else :
-        return {"incorrect email or password"}
+        return None
+    
+
+
+
+def send_me(user_id : int , db :  Session) -> UserResponseMe:
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        return "Login again"
+
+    return {
+        user.username,
+        user.email,
+        user.created_at
+    }
+
+
+
+def populate(user_id : int , db : Session , user : UserResponseMe):
+    user_db = db.query(User).filter(User.id == user_id).first()
+
+    if not user_db:
+        return "your account does not exist"
+    
+    model_dump = user.model_dump(exclude_unset = True)
+    for key, value in model_dump.items():
+        setattr(user_db, key, value)
+
+    db.commit()
+    db.refresh(user_db)
+    return user_db
+
+
+
+def delete(user_id : int ,db : Session):
+    user_db = db.query(User).filter(User.id == user_id).first()
+
+    if not user_db:
+        return "Account does not exist"
+    return f"{user_db.username} deleted successfully"
