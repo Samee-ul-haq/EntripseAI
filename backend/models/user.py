@@ -18,7 +18,7 @@ class User(Base):
 
     @property
     def password(self):
-        raise AttributeError("The password can not be read directly")
+        return self.password_hash
     
     @password.setter
     def password(self,plain_text_password : str):

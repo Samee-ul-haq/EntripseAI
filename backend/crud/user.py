@@ -39,8 +39,8 @@ def login(user : UserLogin, db : Session):
         return f"user with email {user.email} doesnt exist"
 
     if bcrypt.checkpw(
+        user.password.encode("utf-8"),
         user_db.password.encode("utf-8"),
-        db.password.encode("utf-8"),
         ):
         return "login successfull"
     
