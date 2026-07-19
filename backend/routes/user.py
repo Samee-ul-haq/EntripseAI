@@ -6,7 +6,7 @@ import os
 
 
 from backend.database import get_db
-from backend.schemas.user import UserResponse, UserCreate, UserLogin, UserResponseMe
+from backend.schemas.user import UserResponse, UserCreate, UserLogin, UserResponseMe, UserUpdate
 from backend.models import User
 from backend import crud
 
@@ -31,7 +31,7 @@ def get_current_user(
         raise credientials_exception
     
     try:
-        token_type , token  = access_token.spit("", 1)
+        token_type , token  = access_token.split(" ", 1)
         if token_type.lower() != "bearer":
             raise credientials_exception
         
@@ -60,7 +60,7 @@ async def login_user(user : UserLogin,
                         db : Session = Depends(get_db)):
     auth_data = crud.login(user, db)
 
-    if not auth_data:
+    if  auth_data is None:
         raise HTTPException(
             status_code = status.HTTP_401_UNAUTHORIZED,
             detail = "Incorrect email or password",
@@ -85,7 +85,7 @@ async def login_user(user : UserLogin,
 
 
 @router.get("/me")
-async def send_user(user_id : Annotated[int, Depends(get_current_user)] ,db = Depends(get_db)) -> UserResponseMe:
+async def send_user(user_id : Annotated[int, Depends(get_current_user)] ,db : Session = Depends(get_db)) -> UserResponseMe:
     if user_id is None:
         return  "You are not valid for this access"
     return crud.send_me(user_id, db)
@@ -94,16 +94,18 @@ async def send_user(user_id : Annotated[int, Depends(get_current_user)] ,db = De
 
 
 @router.put("/me")
-async def put_content(user : UserResponseMe,
-                       db = Depends(get_db)):
-    user_id = get_current_user
+async def put_content(user_id: Annotated[int, Depends(get_current_user)], 
+                      user : UserUpdate,
+                       db : Session = Depends(get_db),
+                       ):
     return crud.populate(user_id, db ,user)
 
 
 
 @router.delete("/me")
-async def delete_user(db = Depends(get_db)):
-    user_id = get_current_user()
+async def delete_user(user_id : Annotated[int, Depends(get_current_user)],
+                       db : Session = Depends(get_db),
+                       ):
     return crud.delete(user_id, db)
 
 

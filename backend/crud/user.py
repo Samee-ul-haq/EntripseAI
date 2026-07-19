@@ -12,11 +12,16 @@ from backend.schemas.user import (UserCreate, UserLogin, UserResponse, UserRespo
 
 
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"])
-SECREAT_KEY  = os.getenv("SECRET_KEY")
+SECRET_KEY  = os.getenv("SECRET_KEY")
 ALGORITHM  = os.getenv("ALGORITHM")
 
 
 def create_user(user : UserCreate, db: Session)-> User:
+    user_db = db.query(User).filter_by(email = user.email).first()
+
+    if user_db :
+        return "User exists"
+
     db_user = User(
         username = user.username, 
         email = user.email,
@@ -45,7 +50,7 @@ def login(user : UserLogin, db : Session):
     user_db = db.query(User).filter(User.email == user.email).first()
 
     if user_db is None:
-        return f"user with email {user.email} doesnt exist"
+        return None
 
     if bcrypt.checkpw(
         user.password.encode("utf-8"),
@@ -58,7 +63,7 @@ def login(user : UserLogin, db : Session):
             "exp" : expire
         }
 
-        encoded_jwt = jwt.encode(token_data, SECREAT_KEY, ALGORITHM)
+        encoded_jwt = jwt.encode(token_data, SECRET_KEY, ALGORITHM)
 
         return {
             "access_token" : encoded_jwt,
@@ -78,9 +83,9 @@ def send_me(user_id : int , db :  Session) -> UserResponseMe:
         return "Login again"
 
     return {
-        user.username,
-        user.email,
-        user.created_at
+        "username" : user.username,
+        "email" : user.email,
+        "created_at" : user.created_at
     }
 
 
@@ -104,6 +109,10 @@ def populate(user_id : int , db : Session , user : UserResponseMe):
 def delete(user_id : int ,db : Session):
     user_db = db.query(User).filter(User.id == user_id).first()
 
-    if not user_db:
-        return "Account does not exist"
+    if user_db is None:
+        raise HTTPException(status_code = 404, details="User not found")
+    
+    db.delete(user_db)
+    db.commit()
+
     return f"{user_db.username} deleted successfully"
