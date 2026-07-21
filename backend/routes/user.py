@@ -7,7 +7,6 @@ import os
 
 from backend.database import get_db
 from backend.schemas.user import UserResponse, UserCreate, UserLogin, UserResponseMe, UserUpdate
-from backend.models import User
 from backend import crud
 
 
@@ -47,7 +46,9 @@ def get_current_user(
         raise credientials_exception
     
 
-@router.post("/register")
+@router.post("/register" , 
+             status_code = status.HTTP_201_CREATED,
+             response_model = UserResponse)
 async def register_user(user : UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(user, db)
 
@@ -75,25 +76,25 @@ async def login_user(user : UserLogin,
         max_age = 3600,
         expires = 3600,
         samesite = "lax",
-        secure = False
+        secure = True
     )
 
-    return {"message":"Login successfull"}
+    return {"message":"Login successfull", "token":token}
 
 
 
 
 
-@router.get("/me")
-async def send_user(user_id : Annotated[int, Depends(get_current_user)] ,db : Session = Depends(get_db)) -> UserResponseMe:
-    if user_id is None:
-        return  "You are not valid for this access"
+@router.get("/me", response_model = UserResponseMe)
+async def send_user(user_id : Annotated[int, Depends(get_current_user)] ,
+                    db : Session = Depends(get_db) ,
+                    ):
     return crud.send_me(user_id, db)
 
 
 
 
-@router.put("/me")
+@router.put("/me", response_model = UserResponse)
 async def put_content(user_id: Annotated[int, Depends(get_current_user)], 
                       user : UserUpdate,
                        db : Session = Depends(get_db),

@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 
 from backend.models import User
-from backend.schemas.user import (UserCreate, UserLogin, UserResponse, UserResponseMe)
+from backend.schemas.user import (UserCreate, UserLogin, UserResponse, UserResponseMe, UserUpdate)
 
 
 
@@ -20,7 +20,7 @@ def create_user(user : UserCreate, db: Session)-> User:
     user_db = db.query(User).filter_by(email = user.email).first()
 
     if user_db :
-        return "User exists"
+        raise HTTPException( status_code = 409 , detail = "A user with this email already exists")
 
     db_user = User(
         username = user.username, 
@@ -32,7 +32,7 @@ def create_user(user : UserCreate, db: Session)-> User:
     db.commit()
     db.refresh(db_user)
 
-    return {"message":f"{db_user} created successfully"}
+    return db_user
 
 
 
@@ -63,7 +63,7 @@ def login(user : UserLogin, db : Session):
             "exp" : expire
         }
 
-        encoded_jwt = jwt.encode(token_data, SECRET_KEY, ALGORITHM)
+        encoded_jwt = jwt.encode(token_data, SECRET_KEY,algorithm= ALGORITHM)
 
         return {
             "access_token" : encoded_jwt,
@@ -80,21 +80,17 @@ def send_me(user_id : int , db :  Session) -> UserResponseMe:
     user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
-        return "Login again"
+        raise HTTPException(status_code=404, detail= "User not found")
 
-    return {
-        "username" : user.username,
-        "email" : user.email,
-        "created_at" : user.created_at
-    }
+    return user
 
 
 
-def populate(user_id : int , db : Session , user : UserResponseMe):
+def populate(user_id : int , db : Session , user : UserUpdate):
     user_db = db.query(User).filter(User.id == user_id).first()
 
     if not user_db:
-        return "your account does not exist"
+        raise HTTPException(status_code=404, detail="User not found")
     
     model_dump = user.model_dump(exclude_unset = True)
     for key, value in model_dump.items():
@@ -110,7 +106,7 @@ def delete(user_id : int ,db : Session):
     user_db = db.query(User).filter(User.id == user_id).first()
 
     if user_db is None:
-        raise HTTPException(status_code = 404, details="User not found")
+        raise HTTPException(status_code = 404, detail="User not found")
     
     db.delete(user_db)
     db.commit()
