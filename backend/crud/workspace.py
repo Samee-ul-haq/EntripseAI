@@ -1,0 +1,68 @@
+import bcrypt
+import jwt
+import os
+
+from sqlalchemy.orm import Session
+from models.workspaces import Workspace
+from schemas.workspace import WorkspaceCreate, WorkspaceUpdate
+from typing import Optional, List
+
+
+
+CCESS_TOKEN_EXPIRE_MINUTES = int(os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"])
+SECRET_KEY  = os.getenv("SECRET_KEY")
+ALGORITHM  = os.getenv("ALGORITHM")
+
+
+def create_workspace(db : Session,
+                      workspace : WorkspaceCreate,
+                        owner_id : int,
+                        ) -> Workspace :
+    db_workspace = Workspace(
+        title = workspace.title,
+        description = workspace.description,
+        owner_id = owner_id
+    )
+
+    db.add(db_workspace)
+    db.commit()
+    db.refresh(db_workspace)
+
+    return db_workspace
+
+
+
+def get_user_workspace(db : Session,
+                        owner_id : int, 
+                        skip : int = 0, 
+                        limit : int = 100,
+                          ) -> List[Workspace] :
+    return (db.query(Workspace)
+        .filter(Workspace.owner_id == owner_id)
+        .offset(skip)
+        .limit(limit)
+        .all()
+        )
+
+
+
+def get_workspace_by_id(db: Session, 
+                        workspace_id : int, 
+                        owner_id : int,
+                        ) -> Optional[Workspace]:
+    return (
+        db.query(Workspace)
+        .filter(Workspace.id == workspace_id, Workspace.owner_id == owner_id)
+        .first()
+    )
+
+
+def update_workspace(db : Session, 
+                     workspace_id : int,
+                    workspace_date : WorkspaceUpdate, 
+                    owner_id : int) -> Optional[Workspace]:
+    db_workspace = get_workspace_by_id(db, workspace_id=workspace_id, owner_id=owner_id)
+    if not db_workspace:
+        return None
+
+
