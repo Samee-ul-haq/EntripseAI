@@ -12,7 +12,7 @@ class User(Base):
     username = Column(String,nullable=False)
     email = Column(String, unique=True, nullable=False)
     password_hash = Column(String, nullable=False)
-    created_at = Column(DateTime, server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     workspaces =  relationship("Workspace",back_populates= "user", cascade = "all, delete-orphan")
 
