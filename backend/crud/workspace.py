@@ -1,15 +1,8 @@
-import os
-
 from sqlalchemy.orm import Session
 from models.workspaces import Workspace
 from schemas.workspace import WorkspaceCreate, WorkspaceUpdate
 from typing import Optional, List
 
-
-
-CCESS_TOKEN_EXPIRE_MINUTES = int(os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"])
-SECRET_KEY  = os.getenv("SECRET_KEY")
-ALGORITHM  = os.getenv("ALGORITHM")
 
 
 def create_workspace(db : Session,
@@ -57,13 +50,13 @@ def get_workspace_by_id(db: Session,
 
 def update_workspace(db : Session, 
                      workspace_id : int,
-                    workspace_date : WorkspaceUpdate, 
+                    workspace_data : WorkspaceUpdate, 
                     owner_id : int) -> Optional[Workspace]:
     db_workspace = get_workspace_by_id(db, workspace_id=workspace_id, owner_id=owner_id)
     if not db_workspace:
         return None
 
-    update_dict = workspace_date.model_dump(exclude_unset = True)
+    update_dict = workspace_data.model_dump(exclude_unset = True)
 
     # Only update fields that were explicitly sent in the request body
     for key, value in update_dict.items():
