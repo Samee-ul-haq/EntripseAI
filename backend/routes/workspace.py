@@ -20,7 +20,7 @@ def create_workspace(workspace : WorkspaceCreate,
                       ):
 
     return crud_workspace.create_workspace(
-        db=db, workspace=workspace, owner_id=current_user
+        db=db, workspace=workspace, owner_id = current_user
     )
 
 
@@ -36,13 +36,13 @@ def read_workspaces(db : Session = Depends(get_db),
 
 
 @router.get("/{workspace_id}", response_model = WorksapceResponse)
-def read_workspace(db : Session = Depends(get_db),
-                   workspace_id = int,
-                   curent_user = Depends(get_current_user)
+def read_workspace(workspace_id : int,
+                   db : Session = Depends(get_db),
+                   curent_user : User = Depends(get_current_user)
                    ):
     
     db_worksapce = crud_workspace.get_workspace_by_id(
-        db = db ,workspace_id=workspace_id, owner_id=curent_user.id
+        db = db ,workspace_id=workspace_id, owner_id=curent_user
     )
 
     if not db_worksapce:
@@ -55,10 +55,10 @@ def read_workspace(db : Session = Depends(get_db),
 
 
 @router.put("/{workspace_id}", response_model = WorksapceResponse)
-def update_workspace(db : Session = Depends(get_db),
-                    workspace_id = int,
-                    workspace = WorkspaceUpdate,
-                    current_user = Depends(get_current_user),
+def update_workspace(workspace_id : int,
+                     workspace : WorkspaceUpdate,
+                    db : Session = Depends(get_db),       
+                    current_user : User = Depends(get_current_user),
                     ):
     updated_workspace = crud_workspace.update_workspace(
         db=db, workspace_id = workspace_id, workspace_data = workspace, owner_id = current_user
@@ -73,10 +73,10 @@ def update_workspace(db : Session = Depends(get_db),
     return updated_workspace
 
 
-@router.delete("/{workspace_id}, status_code = status.HTTP_204_NO_CONTENT")
-def delete_workspace(db : Session = Depends(get_db),
-                     workspace_id = int,
-                     current_user = Depends(get_current_user)
+@router.delete("/{workspace_id}", status_code = status.HTTP_204_NO_CONTENT)
+def delete_workspace(workspace_id : int,
+                    db : Session = Depends(get_db),
+                     current_user : User = Depends(get_current_user)
                      ):
     success = crud_workspace.delete_workspace(
         db = db, workspace_id = workspace_id, owner_id = current_user

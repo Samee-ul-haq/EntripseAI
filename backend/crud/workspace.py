@@ -12,7 +12,7 @@ def create_workspace(db : Session,
     db_workspace = Workspace(
         name = workspace.name,
         description = workspace.description,
-        owner_id = owner_id
+        user_id = owner_id
     )
 
     db.add(db_workspace)
@@ -29,7 +29,7 @@ def get_user_workspace(db : Session,
                         limit : int = 100,
                           ) -> List[Workspace] :
     return (db.query(Workspace)
-        .filter(Workspace.owner_id == owner_id)
+        .filter(Workspace.user_id == owner_id)
         .offset(skip)
         .limit(limit)
         .all()
@@ -43,7 +43,7 @@ def get_workspace_by_id(db: Session,
                         ) -> Optional[Workspace]:
     return (
         db.query(Workspace)
-        .filter(Workspace.id == workspace_id, Workspace.owner_id == owner_id)
+        .filter(Workspace.id == workspace_id, Workspace.user_id == owner_id)
         .first()
     )
 

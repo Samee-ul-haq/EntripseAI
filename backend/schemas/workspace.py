@@ -19,7 +19,7 @@ class WorkspaceUpdate(BaseModel):
 
 class WorksapceResponse(WorkspaceBase):
     id : int
-    owner_id : int
+    user_id : int
     created_at : datetime
     updated_at : Optional[datetime] = None
     # Enable ORM mode so Pydantic can read SQLAlchemy model attributes directly
