@@ -7,8 +7,8 @@ from backend.routes import user, workspace
 app = FastAPI(title="Enterprise AI Backend")
 
 
-app.include_router(user)
-app.include_router(workspace)
+app.include_router(user.router)
+app.include_router(workspace.router)
 
 
 @app.get("/")

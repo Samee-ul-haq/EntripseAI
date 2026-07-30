@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models.workspaces import Workspace
-from schemas.workspace import WorkspaceCreate, WorkspaceUpdate
+from backend.models.workspaces import Workspace
+from backend.schemas.workspace import WorkspaceCreate, WorkspaceUpdate
 from typing import Optional, List
 
 

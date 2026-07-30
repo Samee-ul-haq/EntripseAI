@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from pydatic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict
 
 
 class WorkspaceBase(BaseModel):

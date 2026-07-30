@@ -3,11 +3,11 @@ from sqlalchemy.orm import Session
 from typing import List
 
 
-from schemas.workspace import WorksapceResponse, WorkspaceCreate, WorkspaceUpdate
-from routes.user import get_current_user
-from models.user import User
-from database import get_db
-import crud.workspace as crud_workspace
+from backend.schemas.workspace import WorksapceResponse, WorkspaceCreate, WorkspaceUpdate
+from backend.routes.user import get_current_user
+from backend.models.user import User
+from backend.database import get_db
+import backend.crud.workspace as crud_workspace
 
 
 router =  APIRouter(prefix = "/workspaces", tags = ['Workspaces'])
