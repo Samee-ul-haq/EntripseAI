@@ -8,6 +8,8 @@ from backend.database import Base  # Adjust import according to your project str
 from backend.models.conversation import Conversation
 from backend.models.message import Message
 from backend.models.workspaces import Workspace
+from backend.models.user import User
+from backend.models.document import Document
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
