@@ -7,16 +7,14 @@ from backend.models.user import User
 from backend.routes.user import get_current_user
 from backend.schemas.conversation import (
     ConversationCreate,
-    ConversationDetailResponse,
     ConversationResponse,
     ConversationUpdate,
-    MessageCreate,
-    MessageResponse,
+    ConversationDetialResponse
 )
 import backend.crud.conversation as crud_conversation
 
 router = APIRouter(
-    tags=["Conversations & Messages"]
+    tags=["Conversations"]
 )
 
 
@@ -66,7 +64,7 @@ def read_workspace_conversations(
 
 @router.get(
     "/conversations/{conversation_id}",
-    response_model=ConversationDetailResponse,
+    response_model=ConversationDetialResponse,
 )
 def read_conversation_detail(
     conversation_id: int,

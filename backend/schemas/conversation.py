@@ -1,14 +1,14 @@
 from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from datetime import datetime
-from .message import MessageResponse
+from backend.schemas.message import MessageResponse
 
 
 class ConversationBase(BaseModel):
     name : str
 
 
-class ConversationCreate(BaseModel):
+class ConversationCreate(ConversationBase):
     pass
 
 class ConversationUpdate(BaseModel):

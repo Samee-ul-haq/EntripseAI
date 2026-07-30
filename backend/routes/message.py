@@ -6,7 +6,7 @@ from backend.schemas.message import MessageResponse,  MessageCreate
 from backend.routes.user import get_current_user
 from backend.database import get_db
 from backend.models import User
-from backend.crud.message import crud_message
+import backend.crud.message as crud_message
 
 
 router = APIRouter(tags=["Messages"])
