@@ -1,5 +1,3 @@
-import bcrypt
-import jwt
 import os
 
 from sqlalchemy.orm import Session
@@ -65,4 +63,23 @@ def update_workspace(db : Session,
     if not db_workspace:
         return None
 
+    update_dict = workspace_date.model_dump(exclude_unset = True)
 
+    # Only update fields that were explicitly sent in the request body
+    for key, value in update_dict.items():
+        setattr(db_workspace, key, value)
+
+    db.commit()
+    db.resfresh(db_workspace)
+    return db_workspace
+
+
+def delete_workspace(db : Session, workspace_id : int, owner_id : int) -> bool:
+    db_workspace = get_workspace_by_id(db, workspace_id, owner_id)
+
+    if not db_workspace:
+        return False
+
+    db.delete(db_workspace)
+    db.commit()
+    return True
