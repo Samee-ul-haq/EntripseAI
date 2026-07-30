@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict
 
 
 class WorkspaceBase(BaseModel):
-    title : str
+    name : str
     description : Optional[str] = None
 
 
@@ -13,7 +13,7 @@ class WorkspaceCreate(WorkspaceBase):
 
 
 class WorkspaceUpdate(BaseModel):
-    title : Optional[str] = None
+    name : Optional[str] = None
     description : Optional[str] = None
 
 

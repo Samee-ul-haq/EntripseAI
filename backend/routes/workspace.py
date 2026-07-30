@@ -20,7 +20,7 @@ def create_workspace(workspace : WorkspaceCreate,
                       ):
 
     return crud_workspace.create_workspace(
-        db=db, workspace=workspace, owner_id=current_user.id
+        db=db, workspace=workspace, owner_id=current_user
     )
 
 
@@ -31,7 +31,7 @@ def read_workspaces(db : Session = Depends(get_db),
                    limit = 100,
                    ):
     return crud_workspace.get_user_workspace(
-        db = db , owner_id=current_user.id, skip=skip, limit=limit
+        db = db , owner_id=current_user, skip=skip, limit=limit
     )
 
 
@@ -61,7 +61,7 @@ def update_workspace(db : Session = Depends(get_db),
                     current_user = Depends(get_current_user),
                     ):
     updated_workspace = crud_workspace.update_workspace(
-        db=db, workspace_id = workspace_id, workspace_data = workspace, owner_id = current_user.id   
+        db=db, workspace_id = workspace_id, workspace_data = workspace, owner_id = current_user
     )
 
     if not updated_workspace:
@@ -79,7 +79,7 @@ def delete_workspace(db : Session = Depends(get_db),
                      current_user = Depends(get_current_user)
                      ):
     success = crud_workspace.delete_workspace(
-        db = db, workspace_id = workspace_id, owner_id = current_user.id
+        db = db, workspace_id = workspace_id, owner_id = current_user
     )
 
     if not success:

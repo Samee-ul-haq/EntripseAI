@@ -10,7 +10,7 @@ def create_workspace(db : Session,
                         owner_id : int,
                         ) -> Workspace :
     db_workspace = Workspace(
-        title = workspace.title,
+        name = workspace.name,
         description = workspace.description,
         owner_id = owner_id
     )
