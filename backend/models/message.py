@@ -11,8 +11,8 @@ class Message(Base):
     content = Column(Text, nullable=False)
     role = Column(String, nullable = False)
     model_name = Column(String, nullable = True)
-    tokens_used = Column(int , nullable = True)
-    latency_ms = Column(int, nullable = True)
+    tokens_used = Column(Integer , nullable = True)
+    latency_ms = Column(Integer, nullable = True)
 
     #Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now())
