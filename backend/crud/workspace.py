@@ -63,7 +63,7 @@ def update_workspace(db : Session,
         setattr(db_workspace, key, value)
 
     db.commit()
-    db.resfresh(db_workspace)
+    db.refresh(db_workspace)
     return db_workspace
 
 

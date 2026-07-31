@@ -25,7 +25,7 @@ def create_message(
 ):
     """Append a message to an existing conversation thread."""
     db_message = crud_message.create_message(
-        db=db, message=message, conversation_id=conversation_id, user_id=current_user.id
+        db=db, message=message, conversation_id=conversation_id, user_id=current_user
     )
     if not db_message:
         raise HTTPException(
@@ -48,5 +48,5 @@ def read_conversation_messages(
 ):
     """Retrieve message history for a conversation chronologically."""
     return crud_message.get_conversation_messages(
-        db=db, conversation_id=conversation_id, user_id=current_user.id, skip=skip, limit=limit
+        db=db, conversation_id=conversation_id, user_id=current_user, skip=skip, limit=limit
     )

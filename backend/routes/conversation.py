@@ -35,7 +35,7 @@ def create_conversation(
 ):
     """Create a new conversation thread inside a specific workspace."""
     db_conversation = crud_conversation.create_conversation(
-        db=db, conversation=conversation, workspace_id=workspace_id, user_id=current_user.id
+        db=db, conversation=conversation, workspace_id=workspace_id, user_id=current_user
     )
     if not db_conversation:
         raise HTTPException(
@@ -58,7 +58,7 @@ def read_workspace_conversations(
 ):
     """Retrieve all conversation threads inside a workspace."""
     return crud_conversation.get_workspace_conversations(
-        db=db, workspace_id=workspace_id, user_id=current_user.id, skip=skip, limit=limit
+        db=db, worksapce_id=workspace_id, user_id=current_user, skip=skip, limit=limit
     )
 
 
@@ -73,7 +73,7 @@ def read_conversation_detail(
 ):
     """Retrieve a specific conversation along with its full message history."""
     db_conversation = crud_conversation.get_conversation_by_id(
-        db=db, conversation_id=conversation_id, user_id=current_user.id
+        db=db, conversation_id=conversation_id, user_id=current_user
     )
     if not db_conversation:
         raise HTTPException(
@@ -95,7 +95,7 @@ def update_conversation(
 ):
     """Rename a conversation thread."""
     updated = crud_conversation.update_conversation(
-        db=db, conversation_id=conversation_id, conversation_data=conversation, user_id=current_user.id
+        db=db, conversation_id=conversation_id, conversation_data=conversation, user_id=current_user
     )
     if not updated:
         raise HTTPException(
@@ -116,7 +116,7 @@ def delete_conversation(
 ):
     """Delete a conversation thread and all its messages."""
     success = crud_conversation.delete_conversation(
-        db=db, conversation_id=conversation_id, user_id=current_user.id
+        db=db, conversation_id=conversation_id, user_id=current_user
     )
     if not success:
         raise HTTPException(

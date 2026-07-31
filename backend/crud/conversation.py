@@ -17,7 +17,7 @@ def create_conversation(
 
     workspace = db.query(Workspace).filter(
                 Workspace.id ==  workspace_id,
-                workspace.user_id == user_id
+                Workspace.user_id == user_id
     ).first()
 
     if not workspace:
